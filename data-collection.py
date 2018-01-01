@@ -4,10 +4,10 @@ import re
 import tinydb
 import tweepy
 
-_CONSUMER_KEY = 'sUEjiQIVm7NL13z1rFTPw'
-_CONSUKER_SECRET = 'Iwdawl261pQrC9ybxf3dt4mmskow6rhhz1P69W565A'
-_ACCESS_TOKEN = '341464649-nP5kNGthf7x1QQNs5ebzWuBSzzMOeVWHEfTYKAPQ'
-_ACCESS_TOKEN_SECRET = 'QLokF3u5iG2siSxiaY26xYfjwWunJ94FZlpFUQ5YCs8lL'
+_CONSUMER_KEY = ''
+_CONSUKER_SECRET = ''
+_ACCESS_TOKEN = ''
+_ACCESS_TOKEN_SECRET = ''
 
 _MIN_DATE = datetime.datetime(2017,  1,  1,  0,  0,  0)  # inclusive
 _MAX_DATE = datetime.datetime(2017, 12, 24, 23, 59, 59)  # inclusive
