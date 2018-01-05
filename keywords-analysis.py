@@ -61,7 +61,14 @@ def CleanTweet(tweet):
 
 def GenerateMegaTweets(dataset):
 	"""."""
-	return [' '.join(dataset[candidate]['tweets']) for candidate in _CANDIDATES]
+	mega_tweets = []
+	for candidate in _CANDIDATES:
+		mega_tweet = ''
+		for tweet in dataset[candidate]['tweets']:
+			mega_tweet += ' '
+			mega_tweet += CleanTweet(tweet)
+		mega_tweets.append(mega_tweet)
+	return mega_tweets
 
 
 def ComputeTfidf(mega_tweets):
@@ -108,19 +115,13 @@ def ComputeCandidatesKeywords(vocabulary, num_words):
 			keywords[candidate].append(word)
 
 	return keywords
-# sorted_by_second = sorted(data, key=lambda tup: tup[1])
 
-# main
-dataset = LoadDataset()
-mega_tweets = GenerateMegaTweets(dataset)
-tfidf = ComputeTfidf(mega_tweets)
-vocabulary = ComputeCandidatesVocabulary(tfidf)
-keywords = ComputeCandidatesKeywords(vocabulary, num_words=25)
-# 
-import pprint
-ppp = pprint.PrettyPrinter()
-ppp.pprint(keywords)
-import ipdb; ipdb.set_trace()
 
-# Looks okay
-# Properly remove links (e.g., this one in matteorenzi snaphlh8tb)
+if __name__ == '__main__':
+	dataset = LoadDataset()
+	mega_tweets = GenerateMegaTweets(dataset)
+	tfidf = ComputeTfidf(mega_tweets)
+	vocabulary = ComputeCandidatesVocabulary(tfidf)
+	keywords = ComputeCandidatesKeywords(vocabulary, num_words=25)
+	output = pd.DataFrame(keywords, columns=_CANDIDATES)
+	output.to_csv(path_or_buf='keywords.csv', index=False)
