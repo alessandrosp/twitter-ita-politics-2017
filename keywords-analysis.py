@@ -52,7 +52,8 @@ def CleanTweet(tweet):
 	tweet = RemoveLinks(tweet)
 	clean = ''
 	for char in tweet.lower():
-		if char in string.ascii_lowercase or char == ' ':
+		if (char in string.ascii_lowercase 
+		    or char in string.digits or char == ' '):
 			clean += char
 		else:
 			clean += ' '
