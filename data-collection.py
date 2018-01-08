@@ -1,3 +1,6 @@
+#!/usr/bin/python3.5
+# -*- coding: utf-8 -*-
+
 import datetime
 import re
 
@@ -41,6 +44,7 @@ def GetTweets(connection, screen_name):
 	done = False
 
 	while not done:
+		# Note: we can only get 200 tweets per call
 		result_set = connection.user_timeline(
 			screen_name=screen_name,
 			count=200,
@@ -48,7 +52,7 @@ def GetTweets(connection, screen_name):
 			since_id=min_id,
 			max_id=max_id)
 		if result_set:
-			max_id = min([tweet.id for tweet in result_set])-1
+			max_id = min([tweet.id for tweet in result_set]) - 1
 			tweets += [tweet.full_text 
 					   for tweet in result_set
 					   if _MIN_DATE <= tweet.created_at <= _MAX_DATE
@@ -60,7 +64,7 @@ def GetTweets(connection, screen_name):
 	return tweets
 
 
-def SaveTweets(tweets, table_name):
+def SaveTweets(tweets, db, table_name):
 	"""Save the scraped tweets into a TinyDB table."""
 	table = db.table(table_name)
 	for tweet in tweets:
@@ -73,4 +77,4 @@ if __name__ == '__main__':
 	for candidate in _CANDIDATES:
 		print('Processing tweets for {}'.format(candidate))
 		tweets = GetTweets(connection, candidate)
-		SaveTweets(tweets, candidate)
+		SaveTweets(tweets, db, candidate)
