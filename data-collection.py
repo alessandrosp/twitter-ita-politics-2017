@@ -64,17 +64,17 @@ def GetTweets(connection, screen_name):
 	return tweets
 
 
-def SaveTweets(tweets, db, table_name):
+def SaveTweets(tweets, db_name, table_name):
 	"""Save the scraped tweets into a TinyDB table."""
+	db = tinydb.TinyDB(db_name)
 	table = db.table(table_name)
 	for tweet in tweets:
 		table.insert({'text': tweet})
 
 if __name__ == '__main__':
 	db_name = datetime.datetime.today().strftime('db/%Y%m%d%H%M.json')
-	db = tinydb.TinyDB(db_name)
 	connection = CreateTwitterConnection()
 	for candidate in _CANDIDATES:
 		print('Processing tweets for {}'.format(candidate))
 		tweets = GetTweets(connection, candidate)
-		SaveTweets(tweets, db, candidate)
+		SaveTweets(tweets, db_name, candidate)
