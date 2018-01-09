@@ -15,6 +15,7 @@ file is used as input:
 """
 
 import collections
+import logging
 import re
 import string
 
@@ -109,16 +110,19 @@ def save_tweets(tweets, db_name, table_name):
     """It saves tweets on disk in table table_name of db db_name."""
     db = tinydb.TinyDB(db_name)  # pylint: disable=invalid-name
     table = db.table(table_name)
+    table.purge()  # Table is emptied every time to avoid duplicates
     for tweet in tweets:
         table.insert({'text': tweet})
 
 
 def main():
     """Main function for the module."""
+    logging.getLogger().setLevel(logging.INFO)
     dataset = load_dataset()
     cleaned_db_name = _DB_NAME.replace('.json', '_cleaned.json')
     lemmatized_db_name = _DB_NAME.replace('.json', '_lemmatized.json')
     for candidate in _CANDIDATES:
+        logging.info('Processing tweets for %s', candidate)
         tweets = dataset[candidate]['tweets']
         tweets_cleaned = transform_tweets(
             tweets,
@@ -129,6 +133,7 @@ def main():
             transformations=[
                 remove_mentions, remove_links, remove_hashtags,
                 remove_special_characters, lemmatize_tweet])
+        logging.info('Saving tweets for %s', candidate)
         save_tweets(tweets_cleaned, cleaned_db_name, candidate)
         save_tweets(tweets_lemmatized, lemmatized_db_name, candidate)
 
